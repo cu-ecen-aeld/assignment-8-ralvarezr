@@ -19,6 +19,13 @@ jobs:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           # - name: Clean build environment
           #   run: ./clean.sh
+          - name: Regenerate .config from defconfig
+            run: |
+              rm -f buildroot/.config
+              pushd buildroot
+              make BR2_DEFCONFIG=../base_external/configs/aesd_qemu_defconfig defconfig
+              popd
+              grep LIBC buildroot/.config  # Para depuración, podés quitarlo si no hace falta
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
