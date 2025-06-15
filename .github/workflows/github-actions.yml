@@ -17,15 +17,6 @@ jobs:
           - uses: webfactory/ssh-agent@v0.5.3
             with:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # - name: Clean build environment
-          #   run: ./clean.sh
-          - name: Regenerate .config from defconfig
-            run: |
-              rm -f buildroot/.config
-              cd buildroot
-              make BR2_DEFCONFIG=../base_external/configs/aesd_qemu_defconfig defconfig
-              cd ..
-              grep LIBC buildroot/.config
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
