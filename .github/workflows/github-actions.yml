@@ -20,11 +20,16 @@ jobs:
 
           - name: Force clean output and Buildroot toolchain
             run: |
+
+              ./clean.sh
+
               echo "Cleaning buildroot output directory..."
+              rm -rf buildroot/output/build/glibc*
               rm -rf buildroot/output
 
               echo "Cleaning toolchain host directory..."
               rm -rf buildroot/output/host
+              rm -rf buildroot/output/staging
 
               echo "Cleaning buildroot .config (if exists)..."
               rm -f buildroot/.config
@@ -33,18 +38,26 @@ jobs:
               export BR2_DL_DIR=/tmp/.dl
               mkdir -p $BR2_DL_DIR
 
-              echo "Showing current defconfig:"
-              grep BR2_TOOLCHAIN_BUILDROOT_ buildroot/configs/*.defconfig || true
-
-          - name: Show toolchain settings after config
-            run: |
-              echo "Toolchain settings in .config:"
-              grep BR2_TOOLCHAIN_BUILDROOT_ buildroot/.config || echo ".config not generated yet"
-
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
             run: ./full-test.sh
+
+          - name: Debug Buildroot config and toolchain info
+            if: always()
+            run: |
+              echo "=== Buildroot .config dump ==="
+              cat buildroot/.config || echo "No .config found"
+
+              echo "=== Toolchain sysroot ==="
+              find buildroot/output/host -name 'libc.so' || echo "No libc.so found"
+
+              echo "=== GCC version used ==="
+              buildroot/output/host/bin/aarch64-*-gcc --version || echo "GCC not found"
+
+              echo "=== Files in host/bin ==="
+              ls -lh buildroot/output/host/bin || echo "No host/bin found"
+
           - name: Cleanup
             if: always()
             run: |
