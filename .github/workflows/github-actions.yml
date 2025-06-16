@@ -17,8 +17,30 @@ jobs:
           - uses: webfactory/ssh-agent@v0.5.3
             with:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          - name: Clean
-            run: ./clean.sh
+
+          - name: Force clean output and Buildroot toolchain
+            run: |
+              echo "Cleaning buildroot output directory..."
+              rm -rf buildroot/output
+
+              echo "Cleaning toolchain host directory..."
+              rm -rf buildroot/output/host
+
+              echo "Cleaning buildroot .config (if exists)..."
+              rm -f buildroot/.config
+
+              echo "Setting BR2_DL_DIR to /tmp/.dl to avoid cached toolchain"
+              export BR2_DL_DIR=/tmp/.dl
+              mkdir -p $BR2_DL_DIR
+
+              echo "Showing current defconfig:"
+              grep BR2_TOOLCHAIN_BUILDROOT_ buildroot/configs/*.defconfig || true
+
+          - name: Show toolchain settings after config
+            run: |
+              echo "Toolchain settings in .config:"
+              grep BR2_TOOLCHAIN_BUILDROOT_ buildroot/.config || echo ".config not generated yet"
+
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
