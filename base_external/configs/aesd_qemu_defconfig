@@ -20,3 +20,13 @@ BR2_TARGET_ROOTFS_EXT2_4=y
 BR2_PACKAGE_HOST_QEMU=y
 BR2_PACKAGE_HOST_QEMU_SYSTEM_MODE=y
 BR2_PACKAGE_AESD_ASSIGNMENTS=y
+
+# Configuración toolchain externa Bootlin
+BR2_TOOLCHAIN_EXTERNAL=y
+BR2_TOOLCHAIN_EXTERNAL_DOWNLOAD=y
+BR2_TOOLCHAIN_EXTERNAL_URL="https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2024.02-1.tar.bz2"
+BR2_TOOLCHAIN_EXTERNAL_GCC_12=y
+
+# Desactivo toolchain interno
+# BR2_TOOLCHAIN_BUILDROOT is not set
+# BR2_TOOLCHAIN_BUILDROOT_GLIBC is not set
