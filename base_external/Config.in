@@ -1,3 +1,1 @@
-menu "project_base customizations"
-  source "$BR2_EXTERNAL_project_base_PATH/package/aesd-assignments/Config.in"
-endmenu
+source "$BR2_EXTERNAL_project_base_PATH/package/aesd-assignments/Config.in"
