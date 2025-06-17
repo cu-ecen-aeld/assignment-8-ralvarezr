@@ -20,6 +20,25 @@ jobs:
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+          - name: Force clean output and Buildroot toolchain
+            run: |
+
+              ./clean.sh
+
+              echo "Cleaning buildroot output directory..."
+              rm -rf buildroot/output/build/glibc*
+              rm -rf buildroot/output
+
+              echo "Cleaning toolchain host directory..."
+              rm -rf buildroot/output/host
+              rm -rf buildroot/output/staging
+
+              echo "Cleaning buildroot .config (if exists)..."
+              rm -f buildroot/.config
+
+              echo "Setting BR2_DL_DIR to /tmp/.dl to avoid cached toolchain"
+              export BR2_DL_DIR=/tmp/.dl
+              mkdir -p $BR2_DL_DIR
             run: ./full-test.sh
           - name: Cleanup
             if: always()
