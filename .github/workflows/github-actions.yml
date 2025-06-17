@@ -18,45 +18,69 @@ jobs:
             with:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+          - name: Install required packages
+            run: |
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y \
+                build-essential \
+                gawk \
+                bison \
+                flex \
+                texinfo \
+                libncurses-dev \
+                python3 \
+                unzip \
+                git \
+                wget \
+                cpio \
+                rsync \
+                bc \
+                libssl-dev \
+                libelf-dev \
+                libtool \
+                autoconf \
+                automake \
+                python3-distutils
+
           - name: Force clean output and Buildroot toolchain
             run: |
 
               ./clean.sh
 
-              echo "Cleaning buildroot output directory..."
-              rm -rf buildroot/output/build/glibc*
-              rm -rf buildroot/output
-
-              echo "Cleaning toolchain host directory..."
-              rm -rf buildroot/output/host
-              rm -rf buildroot/output/staging
-
-              echo "Cleaning buildroot .config (if exists)..."
-              rm -f buildroot/.config
-
-              echo "Setting BR2_DL_DIR to /tmp/.dl to avoid cached toolchain"
-              export BR2_DL_DIR=/tmp/.dl
-              mkdir -p $BR2_DL_DIR
+#               echo "Cleaning buildroot output directory..."
+#               rm -rf buildroot/output/build/glibc*
+#               rm -rf buildroot/output
+#
+              # echo "Cleaning toolchain host directory..."
+              # rm -rf buildroot/output/host
+              # rm -rf buildroot/output/staging
+#
+              # echo "Cleaning buildroot .config (if exists)..."
+              # rm -f buildroot/.config
+#
+              # echo "Setting BR2_DL_DIR to /tmp/.dl to avoid cached toolchain"
+              # export BR2_DL_DIR=/tmp/.dl
+              # mkdir -p $BR2_DL_DIR
 
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
             run: ./full-test.sh
 
-          - name: Debug Buildroot config and toolchain info
-            if: always()
-            run: |
-              echo "=== Buildroot .config dump ==="
-              cat buildroot/.config || echo "No .config found"
+          # - name: Debug Buildroot config and toolchain info
+          #   if: always()
+          #   run: |
+          #     echo "=== Buildroot .config dump ==="
+          #     cat buildroot/.config || echo "No .config found"
 
-              echo "=== Toolchain sysroot ==="
-              find buildroot/output/host -name 'libc.so' || echo "No libc.so found"
+          #     echo "=== Toolchain sysroot ==="
+          #     find buildroot/output/host -name 'libc.so' || echo "No libc.so found"
 
-              echo "=== GCC version used ==="
-              buildroot/output/host/bin/aarch64-*-gcc --version || echo "GCC not found"
+          #     echo "=== GCC version used ==="
+          #     buildroot/output/host/bin/aarch64-*-gcc --version || echo "GCC not found"
 
-              echo "=== Files in host/bin ==="
-              ls -lh buildroot/output/host/bin || echo "No host/bin found"
+          #     echo "=== Files in host/bin ==="
+          #     ls -lh buildroot/output/host/bin || echo "No host/bin found"
 
           - name: Cleanup
             if: always()
