@@ -17,9 +17,6 @@ jobs:
           - uses: webfactory/ssh-agent@v0.5.3
             with:
                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          - name: Run full test
-            env:
-              GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
           - name: Force clean output and Buildroot toolchain
             run: |
 
@@ -39,6 +36,9 @@ jobs:
               echo "Setting BR2_DL_DIR to /tmp/.dl to avoid cached toolchain"
               export BR2_DL_DIR=/tmp/.dl
               mkdir -p $BR2_DL_DIR
+          - name: Run full test
+            env:
+              GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
             run: ./full-test.sh
           - name: Cleanup
             if: always()
