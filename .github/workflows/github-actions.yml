@@ -42,10 +42,10 @@ jobs:
                 automake \
                 python3-distutils
 
-          - name: Force clean output and Buildroot toolchain
-            run: |
+          # - name: Force clean output and Buildroot toolchain
+          #   run: |
 
-              ./clean.sh
+          #     ./clean.sh
 
 #               echo "Cleaning buildroot output directory..."
 #               rm -rf buildroot/output/build/glibc*
