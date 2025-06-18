@@ -20,6 +20,23 @@ echo "Running test with user $(whoami)"
 
 set +e
 
+# Verify that fakeroot is installed
+if ! command -v fakeroot > /dev/null; then
+  echo "fakeroot not found, installing..."
+  apt-get update && apt-get install -y fakeroot
+fi
+
+# Create a symlink to the fakeroot binary in the expected location
+EXPECTED_PATH="/work/buildroot/output/host/bin/fakeroot"
+SYSTEM_FAKEROOT="$(command -v fakeroot)"
+
+if [ ! -f "$EXPECTED_PATH" ]; then
+  echo "Creating symlink: $EXPECTED_PATH"
+  mkdir -p "$(dirname "$EXPECTED_PATH")"
+  ln -s "$SYSTEM_FAKEROOT" "$EXPECTED_PATH"
+fi
+
+
 # If there's a configuration for the assignment number, use this to look for
 # additional tests
 if [ -f conf/assignment.txt ]; then
