@@ -36,6 +36,8 @@ if [ ! -f "$EXPECTED_PATH" ]; then
   ln -s "$SYSTEM_FAKEROOT" "$EXPECTED_PATH"
 fi
 
+echo "Clean the buildroot folder"
+./clean.sh
 
 # If there's a configuration for the assignment number, use this to look for
 # additional tests
