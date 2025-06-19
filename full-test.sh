@@ -64,8 +64,8 @@ else
     echo "✅ Todas las dependencias están instaladas."
 fi
 
-echo "Clean the buildroot folder"
-./clean.sh
+# echo "Clean the buildroot folder"
+# ./clean.sh
 
 #############################################################################
 # If there's a configuration for the assignment number, use this to look for
