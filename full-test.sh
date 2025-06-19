@@ -20,25 +20,54 @@ echo "Running test with user $(whoami)"
 
 set +e
 
-# Verify that fakeroot is installed
-if ! command -v fakeroot > /dev/null; then
-  echo "fakeroot not found, installing..."
-  apt-get update && apt-get install -y fakeroot
+#############################################################################
+echo "🔍 Verificando dependencias para compilar Buildroot..."
+
+# Lista de dependencias necesarias
+deps=(
+    gcc g++ make wget git rsync file
+    bash diff patch unzip fakeroot
+    perl python3 bc flex bison
+    ssh scp
+)
+
+missing_deps=()
+
+# Verificar si cada dependencia del sistema está instalada
+for dep in "${deps[@]}"; do
+    if ! command -v "$dep" &>/dev/null; then
+        echo "❌ Falta: $dep"
+        missing_deps+=("$dep")
+    fi
+done
+
+# Verificar si está el cross-compiler (toolchain)
+if ! command -v aarch64-none-linux-gnu-gcc &>/dev/null; then
+    echo "❌ Falta: aarch64-none-linux-gnu-gcc (toolchain cruzado)"
+    missing_deps+=("gcc-aarch64-linux-gnu")
 fi
 
-# Create a symlink to the fakeroot binary in the expected location
-EXPECTED_PATH="/work/buildroot/output/host/bin/fakeroot"
-SYSTEM_FAKEROOT="$(command -v fakeroot)"
+# Si hay faltantes, intentar instalarlos
+if [ ${#missing_deps[@]} -ne 0 ]; then
+    echo "⚠️ Se encontraron ${#missing_deps[@]} dependencias faltantes."
 
-if [ ! -f "$EXPECTED_PATH" ]; then
-  echo "Creating symlink: $EXPECTED_PATH"
-  mkdir -p "$(dirname "$EXPECTED_PATH")"
-  ln -s "$SYSTEM_FAKEROOT" "$EXPECTED_PATH"
+    if command -v apt-get &>/dev/null; then
+        echo "💡 Instalando automáticamente con apt-get..."
+        apt-get update
+        apt-get install -y "${missing_deps[@]}"
+    else
+        echo "❌ No se puede instalar automáticamente. Instálalas manualmente:"
+        echo "${missing_deps[@]}"
+        exit 1
+    fi
+else
+    echo "✅ Todas las dependencias están instaladas."
 fi
 
-echo "Clean the buildroot folder"
-./clean.sh
+# echo "Clean the buildroot folder"
+# ./clean.sh
 
+#############################################################################
 # If there's a configuration for the assignment number, use this to look for
 # additional tests
 if [ -f conf/assignment.txt ]; then
