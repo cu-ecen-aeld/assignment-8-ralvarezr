@@ -1,0 +1,19 @@
+#! /bin/sh
+case "$1" in
+    start)
+        echo "Starting aesdchar device"
+        aesdchar_load
+        ;;
+    stop)
+        echo "Stopping aesdchar device"
+        aesdchar_unload
+        ;;
+    status)
+        echo "Status of aesdchar device"
+        echo $?
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status}"
+        exit 1
+esac
+exit 0
