@@ -17,15 +17,15 @@ CHAR_DRIVER_MODULE_SUBDIRS = aesd-char-driver
 $(eval $(kernel-module))
 $(eval $(generic-package))
 
-define CHAR_DRIVER_INSTALL_TARGET_CMDS
-	# load/unload script:
-	$(INSTALL) -m 0700 \
-		$(@D)/aesd-char-driver/aesdchar_load \
-		$(@D)/aesd-char-driver/aesdchar_unload \
-		$(TARGET_DIR)/usr/bin
-	# init script
-	$(INSTALL) -d $(TARGET_DIR)/etc/init.d/
-	$(INSTALL) -m 0700 \
-		$(@D)/aesd-char-driver/aesdchar-start-stop \
-		$(TARGET_DIR)/etc/init.d/S97aesdchar
-endef
+# define CHAR_DRIVER_INSTALL_TARGET_CMDS
+# 	# load/unload script:
+# 	$(INSTALL) -m 0700 \
+# 		$(@D)/aesd-char-driver/aesdchar_load \
+# 		$(@D)/aesd-char-driver/aesdchar_unload \
+# 		$(TARGET_DIR)/usr/bin
+# 	# init script
+# # 	$(INSTALL) -d $(TARGET_DIR)/etc/init.d/
+# # 	$(INSTALL) -m 0700 \
+# # 		$(@D)/aesd-char-driver/aesdchar-start-stop \
+# # 		$(TARGET_DIR)/etc/init.d/S97aesdchar
+# endef
