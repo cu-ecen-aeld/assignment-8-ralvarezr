@@ -4,7 +4,7 @@
 #
 ##############################################################
 
-CHAR_DRIVER_VERSION = '0bee1809f5135397c1ae6fd461d8c92344b3274f'
+CHAR_DRIVER_VERSION = 'ad5cb0ebb3a9f690f5518aee4b0bc329fc08b0cf'
 # Note: Be sure to reference the *ssh* repository URL here (not https) to work properly
 # with ssh keys and the automated build/test system.
 CHAR_DRIVER_SITE = 'git@github.com:cu-ecen-aeld/assignments-3-and-later-ralvarezr.git'
