@@ -1,0 +1,4 @@
+config BR2_PACKAGE_CHAR_DRIVER
+	bool "chardriver"
+	help
+	  Includes the char driver module in the kernel image.
