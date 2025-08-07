@@ -1,0 +1,2 @@
+/etc/init.d/S98lddmodules f 0755 0 0
+/etc/init.d/S97aesdchar f 0755 0 0
